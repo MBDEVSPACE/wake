@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wake on LAN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="bar">
+  <h1><span class="bolt" aria-hidden="true">⏻</span> Wake on LAN</h1>
+  <button id="add-btn" class="ghost" type="button" hidden>+ Add</button>
+</header>
+
+<main id="main" hidden>
+  <ul id="devices" class="devices"></ul>
+  <p id="empty" class="empty" hidden>No devices yet.<br>Add your PC to wake it from anywhere on the network.</p>
+</main>
+
+<section id="gate" class="gate" hidden>
+  <form id="pin-form" class="card">
+    <h2>Enter PIN</h2>
+    <input id="pin-input" type="password" inputmode="numeric" autocomplete="current-password" placeholder="PIN" required>
+    <p id="pin-error" class="error" hidden>Wrong PIN.</p>
+    <button type="submit" class="primary">Unlock</button>
+  </form>
+</section>
+
+<dialog id="editor">
+  <form id="editor-form" method="dialog">
+    <h2 id="editor-title">Add device</h2>
+
+    <label for="f-name">Name</label>
+    <input id="f-name" name="name" required maxlength="64" placeholder="Gaming PC" autocomplete="off">
+
+    <label for="f-mac">MAC address</label>
+    <input id="f-mac" name="mac" required placeholder="AA:BB:CC:DD:EE:FF" autocapitalize="characters"
+           autocomplete="off" spellcheck="false">
+    <p class="hint">The wired NIC of the PC you want to wake.</p>
+
+    <label for="f-ip">IP address <span class="opt">optional</span></label>
+    <input id="f-ip" name="ip" placeholder="192.168.1.50" inputmode="decimal" autocomplete="off">
+    <p class="hint">Used to show whether the PC is already awake.</p>
+
+    <label for="f-port">Status port <span class="opt">optional</span></label>
+    <input id="f-port" name="port" placeholder="3389" inputmode="numeric" autocomplete="off">
+    <p class="hint">A port that is open when the PC is up — 3389 RDP, 22 SSH, 445 file sharing.</p>
+
+    <label for="f-broadcast">Broadcast address <span class="opt">optional</span></label>
+    <input id="f-broadcast" name="broadcast" placeholder="192.168.1.255" inputmode="decimal" autocomplete="off">
+    <p class="hint">Only needed if your ZimaOS box and PC sit on different subnets or VLANs.</p>
+
+    <p id="editor-error" class="error" hidden></p>
+
+    <div class="actions">
+      <button type="button" id="editor-delete" class="danger" hidden>Delete</button>
+      <span class="spacer"></span>
+      <button type="button" id="editor-cancel" class="ghost">Cancel</button>
+      <button type="submit" class="primary">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

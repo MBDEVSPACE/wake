@@ -1,0 +1,16 @@
+# Build and run from source (on the Zima box or any Docker host):
+#   docker compose -f docker-compose.build.yml up -d --build
+name: wake-on-lan
+
+services:
+  wake-on-lan:
+    build: .
+    image: wake-on-lan:local
+    container_name: wake-on-lan
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      WOL_WEB_PORT: 8055
+      WOL_PIN: ""
+    volumes:
+      - /DATA/AppData/wake-on-lan/config:/config

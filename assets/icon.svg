@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Wake on LAN">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3ba0ff"/>
+      <stop offset="1" stop-color="#1f6feb"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#0d1117"/>
+  <circle cx="256" cy="256" r="150" fill="none" stroke="url(#g)" stroke-width="26" opacity="0.35"/>
+  <path d="M276 96 176 286h64l-20 130 116-196h-68z" fill="url(#g)"/>
+</svg>
