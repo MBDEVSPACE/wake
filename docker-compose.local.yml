@@ -1,0 +1,82 @@
+# Wake-on-LAN for ZimaOS - local image variant
+#
+# For when you build the image on the Zima box instead of pulling one:
+#   sh install-on-zima.sh          (or: docker build -t wake-on-lan:local .)
+# then import this file in ZimaOS -> App Store -> Custom Install.
+#
+# pull_policy: never keeps ZimaOS from reaching for a registry that has no
+# such image. host networking stays required: a bridged container cannot put
+# a broadcast on your LAN.
+name: wake-on-lan
+
+services:
+  wake-on-lan:
+    image: wake-on-lan:local
+    pull_policy: never
+    container_name: wake-on-lan
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      # Web UI port. Change it if 8055 is already taken on your Zima box.
+      WOL_WEB_PORT: 8055
+      # Optional PIN gate for the UI. Leave empty for no PIN.
+      WOL_PIN: ""
+      # Optional: seed your PC on first start instead of adding it in the UI.
+      # WOL_NAME: "Gaming PC"
+      # WOL_MAC: "AA:BB:CC:DD:EE:FF"
+      # WOL_IP: "192.168.1.50"
+      # WOL_PORT: "3389"
+    volumes:
+      - /DATA/AppData/wake-on-lan/config:/config
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8055/healthz',timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    x-casaos:
+      envs:
+        - container: WOL_WEB_PORT
+          description:
+            en_us: Port for the web interface.
+        - container: WOL_PIN
+          description:
+            en_us: Optional PIN required to open the app. Leave empty to disable.
+      volumes:
+        - container: /config
+          description:
+            en_us: Stores your saved devices.
+      ports:
+        - container: "8055"
+          description:
+            en_us: Web interface.
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: wake-on-lan
+  author: mbdevspace
+  developer: mbdevspace
+  category: Network
+  store_app_id: wake-on-lan
+  icon: https://raw.githubusercontent.com/mbdevspace/wake/main/assets/icon.svg
+  thumbnail: https://raw.githubusercontent.com/mbdevspace/wake/main/assets/icon.svg
+  index: /
+  port_map: "8055"
+  scheme: http
+  title:
+    en_us: Wake on LAN
+  tagline:
+    en_us: Power on your PC from ZimaOS or the Zima phone app.
+  description:
+    en_us: >-
+      Sends Wake-on-LAN magic packets to any machine on your network and shows
+      whether it is awake. Runs with host networking so broadcasts reach the
+      LAN, keeps your device list on a mounted volume, and has a touch-friendly
+      interface that works inside the ZimaOS phone app.
+  tips:
+    before_install:
+      en_us: >-
+        Enable Wake-on-LAN in your PC's BIOS/UEFI and in the network adapter's
+        power settings before installing. Requires host networking, so the web
+        port must be free on your Zima box.

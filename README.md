@@ -24,26 +24,49 @@ The container can only send the packet — the PC has to be listening for it.
 
 ## Install on ZimaOS
 
-### Option A — Custom install (recommended)
-
-1. In ZimaOS open the **App Store → Custom Install** (the `+` / *Install a customized app* button).
-2. Choose **Import** and paste the contents of [`docker-compose.yml`](docker-compose.yml).
-3. Install, then open the app from your dashboard.
-
-The compose file carries ZimaOS/CasaOS metadata, so it lands on the dashboard
-with a proper name, icon and web-UI link.
-
-### Option B — Build it on the Zima box
+### Option A - build it on the Zima box (works immediately, no registry)
 
 SSH into ZimaOS and run:
 
 ```sh
-git clone https://github.com/mbdevspace/wake.git
+git clone -b claude/zima-wake-on-lan-docker-secqqe https://github.com/MBDEVSPACE/wake.git
 cd wake
-docker compose -f docker-compose.build.yml up -d --build
+sh install-on-zima.sh
 ```
 
-Then open `http://<your-zima-ip>:8055`.
+(The repo is private, so the Zima box needs your GitHub credentials for that
+clone. The `-b` is needed until this branch is merged into a default branch.)
+
+That builds the image locally and starts it on host networking. Open
+`http://<your-zima-ip>:8055`.
+
+If you prefer compose to a script, `docker compose -f docker-compose.build.yml
+up -d --build` does the same thing.
+
+To also get a tile on the ZimaOS dashboard (which is what makes it appear in
+the phone app), go to **App Store -> Custom Install**, choose **Import**, and
+paste [`docker-compose.local.yml`](docker-compose.local.yml). It points at the
+image you just built and sets `pull_policy: never`, so ZimaOS will not try to
+reach a registry.
+
+### Option B - pull a published image
+
+Once an image exists at `ghcr.io/mbdevspace/wake`, install
+[`docker-compose.yml`](docker-compose.yml) through **App Store -> Custom
+Install -> Import**.
+
+The included GitHub Actions workflow builds and pushes that image. Note that a
+package published from a **private** repository is private too, and ZimaOS
+pulls anonymously - so either make the package public
+(*GitHub -> your profile -> Packages -> wake -> Package settings -> Change
+visibility*), or log the Zima box in first:
+
+```sh
+echo <your-github-token> | docker login ghcr.io -u <your-github-username> --password-stdin
+```
+
+Both compose files carry ZimaOS/CasaOS metadata, so the app lands on your
+dashboard with a proper name, icon and web-UI link.
 
 ## Using it from the Zima phone app
 
@@ -118,6 +141,10 @@ make sure your router forwards directed broadcasts — many do not, by design.
 
 **Port 8055 already used.** Change `WOL_WEB_PORT` (and the `port_map` value in
 the compose file if you installed via ZimaOS).
+
+**`denied` when ZimaOS pulls the image.** Nothing is published at that address
+yet, or the package is private. Use Option A above, or follow the visibility /
+`docker login` note in Option B.
 
 ## License
 
