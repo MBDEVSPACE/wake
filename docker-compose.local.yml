@@ -29,7 +29,7 @@ services:
     volumes:
       - /DATA/AppData/wake-on-lan/config:/config
     healthcheck:
-      test: ["CMD", "python3", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8055/healthz',timeout=4)"]
+      test: ["CMD-SHELL", "python3 -c \"import os,urllib.request;urllib.request.urlopen('http://127.0.0.1:'+os.environ.get('WOL_WEB_PORT','8055')+'/healthz',timeout=4)\""]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -59,8 +59,9 @@ x-casaos:
   developer: mbdevspace
   category: Network
   store_app_id: wake-on-lan
-  icon: https://raw.githubusercontent.com/mbdevspace/wake/main/assets/icon.svg
-  thumbnail: https://raw.githubusercontent.com/mbdevspace/wake/main/assets/icon.svg
+  # Inlined so the tile icon works even though the repo is private.
+  icon: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Ildha2Ugb24gTEFOIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzYmEwZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMWY2ZmViIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzBkMTExNyIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTUwIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMjYiIG9wYWNpdHk9IjAuMzUiLz4KICA8cGF0aCBkPSJNMjc2IDk2IDE3NiAyODZoNjRsLTIwIDEzMCAxMTYtMTk2aC02OHoiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+Cg==
+  thumbnail: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Ildha2Ugb24gTEFOIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzYmEwZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMWY2ZmViIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzBkMTExNyIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTUwIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMjYiIG9wYWNpdHk9IjAuMzUiLz4KICA8cGF0aCBkPSJNMjc2IDk2IDE3NiAyODZoNjRsLTIwIDEzMCAxMTYtMTk2aC02OHoiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+Cg==
   index: /
   port_map: "8055"
   scheme: http
